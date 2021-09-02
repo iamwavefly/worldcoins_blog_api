@@ -37,7 +37,7 @@ mongoose
 server.use("/post/", postRoute);
 
 // port listener
-const PORT = process.env.PORT || 401;
+const PORT = process.env.PORT || 4001;
 
 server.listen(PORT, () => {
   console.log(
