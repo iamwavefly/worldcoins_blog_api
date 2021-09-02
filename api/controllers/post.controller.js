@@ -20,7 +20,7 @@ export const createPost = async (req, res) => {
     Key: `blog/assets/images/${req.file.originalname}`,
   };
   // upload image to aws
-  s3.upload(params, (err, data) => {
+  s3.upload(params, async (err, data) => {
     if (err) {
       console.log("Error occured while trying to upload to S3 bucket", err);
     }
@@ -29,27 +29,34 @@ export const createPost = async (req, res) => {
       fs.unlinkSync(req.file.path); // Empty temp folder
       const locationUrl = data.Location;
       // save user to db
-      let newUser = new postSchema({ ...req.body, thumbnail: locationUrl });
-      newUser
-        .save()
-        .then((user) => {
-          res.json({ message: "User created successfully", user });
-        })
-        .catch((error) => {
-          res.json({ message: error });
-        });
+      let Post = new postSchema({ ...req.body, thumbnail: locationUrl });
+      const newPost = await Post.save();
+      if (!newPost)
+        return res.status(401).json({ message: "unable to save post" });
+      res.status(201).json({ message: "User created successfully", newPost });
     }
   });
 };
-// find post
-
+// find all post
+export const findAllPost = async (req, res) => {
+  const posts = await postSchema.find();
+  if (!posts) return res.status(401).json({ message: "no post found" });
+  res.status(200).json({ message: posts });
+};
+// find single post
+export const findSinglePost = async (req, res) => {
+  const { slug } = req.params;
+  const post = await postSchema.findOne({ slug });
+  if (!post) return res.status(404).json({ message: "no post found" });
+  res.status(200).json({ message: post });
+};
 // delete post
 export const deletePost = (req, res) => {
   const { id } = req.params;
   try {
     postSchema.findByIdAndDelete(id, (err) => {
       if (err) return res.json({ err });
-      res.json({ message: "post deleted" });
+      res.status(200).json({ message: "post deleted" });
     });
   } catch (error) {
     res.json({ message: error });
