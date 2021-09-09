@@ -38,12 +38,11 @@ server.get("/", (req, res) => {
   res.send("worldcoinscollection Blog API");
 });
 server.use("/post/", postRoute);
+// `server started on ${chalk.bgYellow.bold("PORT")} ${chalk.bgRed.bold(PORT)}`
 
 // port listener
-const PORT = process.env.PORT || 4001;
+server.set("port", process.env.PORT || 5000);
 
-server.listen(PORT, () => {
-  console.log(
-    `server started on ${chalk.bgYellow.bold("PORT")} ${chalk.bgRed.bold(PORT)}`
-  );
+server.listen(server.get("port"), function () {
+  console.log("Node app is running at localhost:" + server.get("port"));
 });
