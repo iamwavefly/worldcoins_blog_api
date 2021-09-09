@@ -29,7 +29,14 @@ export const createPost = async (req, res) => {
       fs.unlinkSync(req.file.path); // Empty temp folder
       const locationUrl = data.Location;
       // save user to db
-      let Post = new postSchema({ ...req.body, thumbnail: locationUrl });
+      const postStatus = req.body.approvalCode.includes("itNotASecrete")
+        ? "Approved"
+        : "Pending";
+      let Post = new postSchema({
+        ...req.body,
+        thumbnail: locationUrl,
+        postStatus,
+      });
       const newPost = await Post.save();
       if (!newPost)
         return res.status(401).json({ message: "unable to save post" });
@@ -39,7 +46,7 @@ export const createPost = async (req, res) => {
 };
 // find all post
 export const findAllPost = async (req, res) => {
-  const posts = await postSchema.find();
+  const posts = await postSchema.find().sort({ date: "desc" });
   if (!posts) return res.status(401).json({ message: "no post found" });
   res.status(200).json({ message: posts });
 };

@@ -3,7 +3,6 @@ import slugify from "slugify";
 // import dompurify from "dompurify";
 // import { JSDOM } from "jsdom";
 import marked from "marked";
-
 const PostSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -15,6 +14,12 @@ const PostSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
+  },
+  tags: {
+    type: Array,
+  },
+  category: {
+    type: String,
     required: true,
   },
   slug: {
@@ -23,6 +28,14 @@ const PostSchema = new mongoose.Schema({
     unique: true,
   },
   sanitizedHtml: {
+    type: String,
+    required: true,
+  },
+  approvalCode: {
+    type: String,
+    required: true,
+  },
+  postStatus: {
     type: String,
     required: true,
   },
