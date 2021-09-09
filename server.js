@@ -34,12 +34,15 @@ mongoose
   .catch((err) => console.log(err));
 
 //-- assign route
+server.get("/", (req, res) => {
+  res.send("worldcoinscollection Blog API");
+});
 server.use("/post/", postRoute);
 
 // port listener
-app.set("port", process.env.PORT || 5000);
+const PORT = process.env.PORT || 4001;
 
-app.listen(app.get("port"), function () {
+server.listen(PORT, () => {
   console.log(
     `server started on ${chalk.bgYellow.bold("PORT")} ${chalk.bgRed.bold(PORT)}`
   );
