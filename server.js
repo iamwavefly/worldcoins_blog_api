@@ -37,9 +37,9 @@ mongoose
 server.use("/post/", postRoute);
 
 // port listener
-const PORT = process.env.PORT || 4001;
+app.set("port", process.env.PORT || 5000);
 
-server.listen(PORT, () => {
+app.listen(app.get("port"), function () {
   console.log(
     `server started on ${chalk.bgYellow.bold("PORT")} ${chalk.bgRed.bold(PORT)}`
   );
